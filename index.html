@@ -17,22 +17,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <div id="authBox" style="max-width:320px;margin:40px auto;text-align:center">
-  <h3>Login</h3>
-
-  <input id="email" type="email" placeholder="Email" /><br><br>
-  <input id="password" type="password" placeholder="Password" /><br><br>
-
-  <button onclick="login()">Login</button>
-  <button onclick="logout()">Logout</button>
-
-  <p id="authStatus"></p>
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Connecting to Database...</div>
-        <div class="loading-subtext" id="loadingSubtext">Please wait</div>
-    </div>
-
     <div class="connection-status" id="connectionStatus">
         <span class="status-dot"></span>
         <span id="connectionText">Connected</span>
