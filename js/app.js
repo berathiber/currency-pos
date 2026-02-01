@@ -1,7 +1,7 @@
 // =====================================================
 // 🔥 FIREBASE CONFIGURATION
 // =====================================================
-console.log("JS loaded");
+
 const firebaseConfig = {
     apiKey: "AIzaSyDtPhY9THpLXwSJo5kKzAZriqlS79vSqnk",
     authDomain: "currency-exchange-pos.firebaseapp.com",
@@ -10,37 +10,6 @@ const firebaseConfig = {
     messagingSenderId: "855437301179",
     appId: "1:855437301179:web:82dc1aee8f620229c0609e"
 };
-
-const auth = firebase.auth();
-
-// LOGIN
-function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-            document.getElementById("authStatus").innerText = "Logged in";
-        })
-        .catch(err => {
-            document.getElementById("authStatus").innerText = err.message;
-        });
-}
-
-// LOGOUT
-function logout() {
-    auth.signOut();
-}
-
-// AUTH STATE LISTENER (VERY IMPORTANT)
-auth.onAuthStateChanged(user => {
-    if (user) {
-        console.log("Authenticated:", user.email);
-    } else {
-        console.log("Not authenticated");
-    }
-});
-
 
 // =====================================================
 // DEFAULT CURRENCIES DATA
