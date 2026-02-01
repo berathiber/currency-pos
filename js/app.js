@@ -15,30 +15,30 @@ const auth = firebase.auth();
 
 // LOGIN
 function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-  auth.signInWithEmailAndPassword(email, password)
-    .then(() => {
-      document.getElementById("authStatus").innerText = "Logged in";
-    })
-    .catch(err => {
-      document.getElementById("authStatus").innerText = err.message;
-    });
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            document.getElementById("authStatus").innerText = "Logged in";
+        })
+        .catch(err => {
+            document.getElementById("authStatus").innerText = err.message;
+        });
 }
 
 // LOGOUT
 function logout() {
-  auth.signOut();
+    auth.signOut();
 }
 
 // AUTH STATE LISTENER (VERY IMPORTANT)
 auth.onAuthStateChanged(user => {
-  if (user) {
-    console.log("Authenticated:", user.email);
-  } else {
-    console.log("Not authenticated");
-  }
+    if (user) {
+        console.log("Authenticated:", user.email);
+    } else {
+        console.log("Not authenticated");
+    }
 });
 
 
