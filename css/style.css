@@ -1,4 +1,4 @@
-/* ===== UPGRADED RESPONSIVE CSS - PC & MOBILE OPTIMIZED ===== */
+/* ===== UPGRADED RESPONSIVE CSS - OPTIMIZED FOR PC & MOBILE ===== */
 
 /* ===== GLOBAL VARIABLES ===== */
 :root {
@@ -19,28 +19,33 @@
     --gray-700: #334155;
     --gray-800: #1e293b;
     --gray-900: #0f172a;
+    
+    /* Border Radius */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
     --radius-xl: 20px;
+    
+    /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
     --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
     --shadow-xl: 0 20px 50px rgba(0,0,0,0.25);
-    --side-panel-width: 340px;
     
-    /* Responsive spacing */
+    /* Layout */
+    --side-panel-width: 340px;
+    --navbar-height: 50px;
+    
+    /* Responsive Spacing */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 12px;
     --spacing-lg: 16px;
     --spacing-xl: 20px;
-    
-    /* Navbar height for calculations */
-    --navbar-height: 50px;
+    --spacing-2xl: 24px;
 }
 
-/* Mobile-first responsive variables */
+/* Mobile-first variable adjustments */
 @media (max-width: 768px) {
     :root {
         --spacing-xs: 3px;
@@ -48,30 +53,33 @@
         --spacing-md: 10px;
         --spacing-lg: 12px;
         --spacing-xl: 16px;
+        --spacing-2xl: 20px;
         --navbar-height: auto;
     }
 }
 
-/* ===== RESET & BASE STYLES ===== */
+/* ===== BASE RESET & STYLES ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, #0d1b4a 100%);
     min-height: 100vh;
     color: var(--gray-800);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-}
-
-/* Prevent horizontal scroll on mobile */
-html {
-    overflow-x: hidden;
+    line-height: 1.5;
 }
 
 /* ===== LOADING OVERLAY ===== */
@@ -121,9 +129,15 @@ html {
     .loading-spinner {
         width: 50px;
         height: 50px;
+        border-width: 3px;
     }
+    
     .loading-text {
         font-size: 14px;
+    }
+    
+    .loading-subtext {
+        font-size: 12px;
     }
 }
 
@@ -144,6 +158,7 @@ html {
     transition: all 0.3s ease;
     opacity: 0;
     pointer-events: none;
+    box-shadow: var(--shadow-lg);
 }
 
 .connection-status.show {
@@ -173,7 +188,7 @@ html {
     .connection-status {
         top: 80px;
         font-size: 11px;
-        padding: 6px 12px;
+        padding: 6px 14px;
     }
 }
 
@@ -193,23 +208,47 @@ html {
 }
 
 @keyframes slideIn {
-    from { transform: translateX(100px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from { 
+        transform: translateX(100px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
 }
 
 @keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100px); opacity: 0; }
+    from { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
+    to { 
+        transform: translateX(100px); 
+        opacity: 0; 
+    }
 }
 
 @keyframes dropdownIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+        opacity: 0; 
+        transform: translateY(-8px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
 @keyframes modalIn {
-    from { opacity: 0; transform: translateY(20px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.98); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
 }
 
 @keyframes fadeIn {
@@ -217,7 +256,7 @@ html {
     to { opacity: 1; }
 }
 
-/* ===== NAVBAR - RESPONSIVE ===== */
+/* ===== NAVBAR - FULLY RESPONSIVE ===== */
 .navbar {
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     padding: 10px 16px;
@@ -230,6 +269,7 @@ html {
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     min-height: 50px;
+    flex-wrap: wrap;
 }
 
 .nav-brand {
@@ -260,16 +300,22 @@ html {
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 5px;
     white-space: nowrap;
+    user-select: none;
+    touch-action: manipulation;
 }
 
 .nav-btn:hover {
     background: rgba(255,255,255,0.2);
     color: white;
+}
+
+.nav-btn:active {
+    transform: scale(0.98);
 }
 
 .nav-btn.active {
@@ -304,10 +350,15 @@ html {
     align-items: center;
     gap: 5px;
     transition: all 0.2s;
+    touch-action: manipulation;
 }
 
 .sync-btn:hover {
     background: rgba(255,255,255,0.25);
+}
+
+.sync-btn:active {
+    transform: scale(0.95);
 }
 
 .sync-btn.syncing {
@@ -333,24 +384,29 @@ html {
     color: #f87171;
 }
 
-/* Tablet responsive navbar */
+/* Tablet navbar adjustments */
 @media (max-width: 1024px) {
     .nav-brand {
         font-size: 14px;
     }
+    
+    .nav-brand-icon {
+        font-size: 18px;
+    }
+    
     .nav-btn {
         padding: 7px 12px;
         font-size: 11px;
     }
+    
     .nav-time {
         font-size: 11px;
     }
 }
 
-/* Mobile responsive navbar */
+/* Mobile navbar adjustments */
 @media (max-width: 768px) {
     .navbar {
-        flex-wrap: wrap;
         gap: 8px;
         padding: 8px 12px;
     }
@@ -358,10 +414,6 @@ html {
     .nav-brand {
         font-size: 14px;
         gap: 6px;
-    }
-    
-    .nav-brand-icon {
-        font-size: 18px;
     }
     
     .nav-center {
@@ -374,7 +426,7 @@ html {
     .nav-btn {
         flex: 1;
         min-width: 0;
-        padding: 6px 10px;
+        padding: 7px 10px;
         font-size: 10px;
         justify-content: center;
     }
@@ -388,12 +440,20 @@ html {
     }
     
     .sync-btn {
-        padding: 5px 8px;
+        padding: 5px 10px;
         font-size: 10px;
     }
     
     .db-indicator {
         display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-btn {
+        font-size: 9px;
+        padding: 6px 8px;
+        gap: 3px;
     }
 }
 
@@ -424,6 +484,12 @@ html {
     }
 }
 
+@media (max-width: 480px) {
+    .main-content {
+        padding: 8px;
+    }
+}
+
 /* ===== CARD - RESPONSIVE ===== */
 .card {
     background: white;
@@ -439,6 +505,12 @@ html {
     .card {
         padding: 12px;
         border-radius: var(--radius-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 10px;
     }
 }
 
@@ -507,6 +579,7 @@ html {
         flex-direction: column;
         text-align: center;
         padding: 10px 12px;
+        gap: 8px;
     }
     
     .tx-header-left {
@@ -538,6 +611,16 @@ html {
     }
 }
 
+@media (max-width: 480px) {
+    .tx-header {
+        padding: 8px 10px;
+    }
+    
+    .tx-profit-value {
+        font-size: 16px;
+    }
+}
+
 /* ===== EXCHANGE ROW - RESPONSIVE ===== */
 .exchange-row {
     display: grid;
@@ -561,7 +644,7 @@ html {
     border-radius: var(--radius-md);
     padding: 12px;
     border: 2px solid var(--gray-200);
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     min-width: 0;
 }
 
@@ -624,7 +707,7 @@ html {
     width: 100%;
     padding: 6px 10px;
     border-radius: var(--radius-sm);
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .amount-input:focus {
@@ -648,7 +731,7 @@ html {
 @media (max-width: 768px) {
     .amount-input {
         font-size: 18px;
-        padding: 8px;
+        padding: 8px 10px;
     }
 }
 
@@ -673,12 +756,17 @@ html {
     border: 2px solid var(--gray-200);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     min-width: 100px;
+    touch-action: manipulation;
 }
 
 .picker-trigger:hover {
     border-color: #3b82f6;
+}
+
+.picker-trigger:active {
+    transform: scale(0.98);
 }
 
 .picker-trigger.open {
@@ -719,7 +807,7 @@ html {
     font-size: 9px;
     color: var(--gray-400);
     flex-shrink: 0;
-    transition: transform 0.2s;
+    transition: transform 0.2s ease;
 }
 
 .picker-trigger.open .picker-arrow {
@@ -734,6 +822,7 @@ html {
     .picker-trigger {
         width: 100%;
         justify-content: space-between;
+        min-height: 44px;
     }
 }
 
@@ -783,6 +872,7 @@ html {
 .picker-list {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 6px;
 }
 
@@ -793,11 +883,17 @@ html {
     padding: 8px 10px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.15s ease;
+    touch-action: manipulation;
+    min-height: 40px;
 }
 
 .picker-option:hover {
     background: var(--gray-100);
+}
+
+.picker-option:active {
+    background: var(--gray-200);
 }
 
 .picker-option.selected {
@@ -838,6 +934,10 @@ html {
         right: 5vw !important;
         width: 90vw;
     }
+    
+    .picker-option {
+        min-height: 44px;
+    }
 }
 
 /* ===== SWAP BUTTON - RESPONSIVE ===== */
@@ -854,12 +954,17 @@ html {
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 15px rgba(59,130,246,0.4);
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     flex-shrink: 0;
+    touch-action: manipulation;
 }
 
 .swap-btn:hover {
     transform: rotate(180deg) scale(1.1);
+}
+
+.swap-btn:active {
+    transform: rotate(180deg) scale(1.05);
 }
 
 @media (max-width: 900px) {
@@ -868,6 +973,14 @@ html {
         height: 36px;
         margin: 0 auto;
         font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .swap-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
     }
 }
 
@@ -918,7 +1031,7 @@ html {
     padding: 4px 8px;
     border-radius: var(--radius-sm);
     outline: none;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     width: 100px;
 }
 
@@ -1020,6 +1133,12 @@ html {
     }
 }
 
+@media (max-width: 480px) {
+    .rate-editable {
+        width: 70px;
+    }
+}
+
 /* ===== LOGIC BOX - RESPONSIVE ===== */
 .logic-box {
     background: white;
@@ -1036,11 +1155,17 @@ html {
     padding: 10px 12px;
     cursor: pointer;
     user-select: none;
-    transition: background 0.2s;
+    transition: background 0.2s ease;
+    touch-action: manipulation;
+    min-height: 44px;
 }
 
 .logic-header:hover {
     background: var(--gray-50);
+}
+
+.logic-header:active {
+    background: var(--gray-100);
 }
 
 .logic-title {
@@ -1118,6 +1243,7 @@ html {
     font-weight: 700;
     color: var(--gray-800);
     text-align: right;
+    word-break: break-word;
 }
 
 .logic-row.highlight {
@@ -1203,17 +1329,23 @@ html {
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    touch-action: manipulation; /* Improve mobile tap response */
+    touch-action: manipulation;
+    user-select: none;
+    min-height: 40px;
 }
 
 .btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+.btn:active:not(:disabled) {
+    transform: scale(0.98);
 }
 
 .btn-primary {
@@ -1227,10 +1359,6 @@ html {
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(16,185,129,0.4);
-}
-
-.btn-primary:active:not(:disabled) {
-    transform: translateY(0);
 }
 
 .btn-secondary {
@@ -1250,7 +1378,8 @@ html {
     
     .btn {
         width: 100%;
-        padding: 12px 16px;
+        min-width: 0;
+        min-height: 44px;
     }
     
     .btn-primary {
@@ -1300,11 +1429,16 @@ html {
     transition: all 0.3s ease;
     z-index: 95;
     box-shadow: -3px 0 15px rgba(0,0,0,0.2);
+    touch-action: manipulation;
 }
 
 .panel-toggle:hover {
     background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
     width: 35px;
+}
+
+.panel-toggle:active {
+    transform: translateY(-50%) scale(0.95);
 }
 
 .panel-toggle-icon {
@@ -1351,12 +1485,17 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .panel-close:hover {
     background: rgba(255,255,255,0.25);
     transform: rotate(90deg);
+}
+
+.panel-close:active {
+    transform: rotate(90deg) scale(0.9);
 }
 
 .panel-tabs {
@@ -1377,12 +1516,18 @@ html {
     font-size: 10px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     text-align: center;
+    touch-action: manipulation;
+    min-height: 36px;
 }
 
 .panel-tab:hover {
     background: rgba(255,255,255,0.12);
+}
+
+.panel-tab:active {
+    background: rgba(255,255,255,0.15);
 }
 
 .panel-tab.active {
@@ -1467,6 +1612,11 @@ html {
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: var(--radius-sm);
     padding: 10px;
+    transition: background 0.2s ease;
+}
+
+.inventory-item:hover {
+    background: rgba(255,255,255,0.12);
 }
 
 .inventory-left {
@@ -1521,11 +1671,16 @@ html {
     padding: 10px;
     margin-bottom: 6px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .history-item:hover {
     background: rgba(255,255,255,0.15);
+}
+
+.history-item:active {
+    background: rgba(255,255,255,0.2);
 }
 
 .history-icon {
@@ -1609,6 +1764,7 @@ html {
 .main-footer {
     text-align: center;
     margin-top: 14px;
+    padding: 0 10px;
 }
 
 .main-footer .footer-text {
@@ -1683,7 +1839,9 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    touch-action: manipulation;
 }
 
 .modal-close:hover {
@@ -1691,10 +1849,15 @@ html {
     transform: rotate(90deg);
 }
 
+.modal-close:active {
+    transform: rotate(90deg) scale(0.9);
+}
+
 .modal-body {
     padding: 20px;
     max-height: 75vh;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .modal-tabs {
@@ -1713,11 +1876,16 @@ html {
     font-weight: 600;
     color: var(--gray-500);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .modal-tab:hover {
     border-color: #3b82f6;
+}
+
+.modal-tab:active {
+    transform: scale(0.98);
 }
 
 .modal-tab.active {
@@ -1760,6 +1928,24 @@ html {
         padding: 8px 10px;
         font-size: 10px;
         text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-backdrop {
+        padding: 5px;
+    }
+    
+    .modal {
+        margin: 5px auto;
+    }
+    
+    .modal-header {
+        padding: 10px 12px;
+    }
+    
+    .modal-body {
+        padding: 12px;
     }
 }
 
@@ -1808,7 +1994,7 @@ html {
     font-size: 13px;
     font-weight: 500;
     outline: none;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     background: white;
 }
 
@@ -1839,12 +2025,17 @@ html {
     font-weight: 600;
     color: var(--gray-600);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .mini-btn:hover {
     background: var(--gray-200);
     border-color: var(--gray-300);
+}
+
+.mini-btn:active {
+    transform: scale(0.95);
 }
 
 @media (max-width: 768px) {
@@ -1865,6 +2056,7 @@ html {
     gap: 8px;
     max-height: 320px;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 6px 4px;
     background: var(--gray-50);
     border-radius: var(--radius-sm);
@@ -1879,7 +2071,7 @@ html {
     border: 2px solid var(--gray-200);
     border-radius: var(--radius-sm);
     padding: 8px 10px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .rate-input-item:hover {
@@ -1927,6 +2119,7 @@ html {
     font-weight: 600;
     outline: none;
     text-align: right;
+    transition: border-color 0.2s ease;
 }
 
 .rate-input-item input:focus {
@@ -1942,6 +2135,10 @@ html {
     .rate-input-item {
         padding: 10px;
     }
+    
+    .rate-input-item input {
+        width: 80px;
+    }
 }
 
 /* ===== CURRENCY TABS - RESPONSIVE ===== */
@@ -1951,6 +2148,7 @@ html {
     gap: 6px;
     max-height: 180px;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 6px;
     background: var(--gray-50);
     border-radius: var(--radius-sm);
@@ -1970,8 +2168,10 @@ html {
     font-weight: 600;
     color: var(--gray-600);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     text-align: center;
+    touch-action: manipulation;
+    min-height: 60px;
 }
 
 .currency-tab img {
@@ -2001,6 +2201,10 @@ html {
     background: #f8faff;
 }
 
+.currency-tab:active {
+    transform: scale(0.95);
+}
+
 .currency-tab.active {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     color: white;
@@ -2022,6 +2226,12 @@ html {
     }
 }
 
+@media (max-width: 480px) {
+    .currency-tabs-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /* ===== TOGGLE GROUP - RESPONSIVE ===== */
 .toggle-group {
     display: grid;
@@ -2039,16 +2249,22 @@ html {
     font-weight: 600;
     color: var(--gray-600);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+    touch-action: manipulation;
+    min-height: 44px;
 }
 
 .toggle-btn:hover {
     border-color: #3b82f6;
     background: #f8faff;
+}
+
+.toggle-btn:active {
+    transform: scale(0.98);
 }
 
 .toggle-btn.active {
@@ -2071,6 +2287,7 @@ html {
     gap: 8px;
     max-height: 280px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .tier-item {
@@ -2078,7 +2295,7 @@ html {
     border: 2px solid var(--gray-200);
     border-radius: var(--radius-sm);
     padding: 14px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .tier-item:hover {
@@ -2122,11 +2339,16 @@ html {
     font-size: 10px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .tier-remove:hover {
     background: #fecaca;
+}
+
+.tier-remove:active {
+    transform: scale(0.95);
 }
 
 .tier-inputs {
@@ -2155,7 +2377,7 @@ html {
     font-size: 13px;
     font-weight: 600;
     outline: none;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .input-group input:focus {
@@ -2178,13 +2400,19 @@ html {
     font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    min-height: 44px;
 }
 
 .add-tier-btn:hover {
     border-color: #3b82f6;
     background: #eff6ff;
     border-style: solid;
+}
+
+.add-tier-btn:active {
+    transform: scale(0.98);
 }
 
 @media (max-width: 768px) {
@@ -2204,6 +2432,7 @@ html {
     margin-top: 16px;
     padding-top: 14px;
     border-top: 2px solid var(--gray-100);
+    flex-wrap: wrap;
 }
 
 .save-actions .btn-secondary {
@@ -2220,12 +2449,18 @@ html {
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    touch-action: manipulation;
 }
 
 .save-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(16,185,129,0.4);
+}
+
+.save-btn:active {
+    transform: translateY(0);
 }
 
 @media (max-width: 768px) {
@@ -2270,6 +2505,7 @@ html {
     padding: 4px 0;
     font-size: 11px;
     border-bottom: 1px dotted var(--gray-200);
+    gap: 8px;
 }
 
 .receipt-row.highlight {
@@ -2298,6 +2534,7 @@ html {
     display: flex;
     gap: 8px;
     margin-top: 16px;
+    flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {
@@ -2307,6 +2544,14 @@ html {
     
     .receipt-row {
         font-size: 10px;
+    }
+    
+    .receipt-actions {
+        flex-direction: column;
+    }
+    
+    .receipt-actions .btn {
+        width: 100%;
     }
 }
 
@@ -2318,6 +2563,7 @@ html {
 .panel-body::-webkit-scrollbar,
 .modal-body::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
 }
 
 .rate-grid::-webkit-scrollbar-track,
@@ -2409,7 +2655,9 @@ html {
     .nav-btn,
     .picker-trigger,
     .currency-tab,
-    .toggle-btn {
+    .toggle-btn,
+    .modal-tab,
+    .panel-tab {
         min-height: 44px;
     }
     
@@ -2417,13 +2665,9 @@ html {
     .btn:hover,
     .nav-btn:hover,
     .picker-trigger:hover,
-    .currency-tab:hover {
+    .currency-tab:hover,
+    .toggle-btn:hover {
         transform: none;
-    }
-    
-    /* Improve active states for touch */
-    .btn:active {
-        opacity: 0.8;
     }
 }
 
@@ -2435,6 +2679,10 @@ html {
     
     .side-panel {
         height: calc(100vh - 60px);
+    }
+    
+    .navbar {
+        padding: 6px 12px;
     }
 }
 
@@ -2455,16 +2703,48 @@ html {
     outline-offset: 2px;
 }
 
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
 /* ===== HIGH CONTRAST MODE SUPPORT ===== */
 @media (prefers-contrast: high) {
     .btn,
     .nav-btn,
-    .currency-tab {
+    .currency-tab,
+    .picker-trigger {
         border-width: 3px;
     }
 }
 
-/* ===== DARK MODE SUPPORT (if needed in future) ===== */
-@media (prefers-color-scheme: dark) {
-    /* Dark mode styles can be added here if needed */
+/* ===== SAFE AREA INSETS FOR NOTCHED DEVICES ===== */
+@supports (padding: max(0px)) {
+    .navbar {
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
+    }
+    
+    .main-content {
+        padding-left: max(14px, env(safe-area-inset-left));
+        padding-right: max(14px, env(safe-area-inset-right));
+    }
+}
+
+/* ===== VERY SMALL MOBILE DEVICES ===== */
+@media (max-width: 360px) {
+    .nav-btn {
+        font-size: 8px;
+        padding: 5px 6px;
+    }
+    
+    .tx-profit-value {
+        font-size: 14px;
+    }
+    
+    .amount-input {
+        font-size: 14px;
+    }
 }
