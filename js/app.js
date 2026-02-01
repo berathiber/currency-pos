@@ -1,6 +1,7 @@
 // =====================================================
 // 🔥 FIREBASE CONFIGURATION
 // =====================================================
+console.log("JS loaded");
 const firebaseConfig = {
     apiKey: "AIzaSyDtPhY9THpLXwSJo5kKzAZriqlS79vSqnk",
     authDomain: "currency-exchange-pos.firebaseapp.com",
