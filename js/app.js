@@ -10,32 +10,34 @@ const firebaseConfig = {
     appId: "1:855437301179:web:82dc1aee8f620229c0609e"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 const auth = firebase.auth();
 
-function login(email, password) {
-    auth.signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-            console.log("Logged in:", userCredential.user.email);
-        })
-        .catch(error => {
-            alert(error.message);
-        });
+// LOGIN
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      document.getElementById("authStatus").innerText = "Logged in";
+    })
+    .catch(err => {
+      document.getElementById("authStatus").innerText = err.message;
+    });
 }
 
+// LOGOUT
 function logout() {
-    auth.signOut();
+  auth.signOut();
 }
 
+// AUTH STATE LISTENER (VERY IMPORTANT)
 auth.onAuthStateChanged(user => {
-    if (user) {
-        console.log("User authenticated");
-        // Enable write actions
-    } else {
-        console.log("User not logged in");
-        // Disable write actions
-    }
+  if (user) {
+    console.log("Authenticated:", user.email);
+  } else {
+    console.log("Not authenticated");
+  }
 });
 
 
