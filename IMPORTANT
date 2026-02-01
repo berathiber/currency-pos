@@ -1,1 +1,287 @@
-index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Currency Exchange | POS</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Connecting to Database...</div>
+        <div class="loading-subtext" id="loadingSubtext">Please wait</div>
+    </div>
+
+    <div class="connection-status" id="connectionStatus">
+        <span class="status-dot"></span>
+        <span id="connectionText">Connected</span>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-brand-icon">💱</span>
+            <span>Currency Exchange</span>
+        </div>
+        <div class="nav-center">
+            <button class="nav-btn active">💱 Exchange</button>
+            <button class="nav-btn" onclick="openSettings()">⚙️ Settings</button>
+        </div>
+        <div class="nav-right">
+            <div class="db-indicator" id="dbIndicator">
+                <span>🔥</span>
+                <span>Firebase Connected</span>
+            </div>
+            <span class="nav-time" id="navTime">--:--:--</span>
+            <button class="sync-btn" id="syncBtn" onclick="syncFromFirebase()">
+                <span id="syncIcon">🔄</span> Sync
+            </button>
+        </div>
+    </nav>
+
+    <button class="panel-toggle" id="panelToggle" onclick="toggleSidePanel()">
+        <span class="panel-toggle-icon">◀</span>
+    </button>
+
+    <div class="main-wrapper">
+        <div class="main-content" id="mainContent">
+            <div class="card">
+                <div class="tx-header">
+                    <div class="tx-header-left">
+                        <div class="tx-icon">💱</div>
+                        <div>
+                            <div class="tx-title" id="txTitle">Currency Exchange</div>
+                            <div class="tx-subtitle" id="txSubtitle">Convert between currencies</div>
+                        </div>
+                    </div>
+                    <div class="tx-profit">
+                        <div class="tx-profit-label">Your Profit</div>
+                        <div class="tx-profit-value" id="profitValue">$0.00</div>
+                    </div>
+                </div>
+
+                <div class="exchange-row">
+                    <div class="currency-card from-card">
+                        <div class="currency-card-label">📥 Customer Has</div>
+                        <div class="currency-input-row">
+                            <input type="number" class="amount-input" id="fromAmount" value="1000" oninput="calculate('from')" placeholder="0.00">
+                            <div class="currency-picker" id="fromPicker">
+                                <div class="picker-trigger" id="fromTrigger">
+                                    <img src="https://flagcdn.com/w40/us.png" class="picker-flag" id="fromFlag">
+                                    <div class="picker-text">
+                                        <div class="picker-code" id="fromCode">USD</div>
+                                        <div class="picker-name" id="fromName">US Dollar</div>
+                                    </div>
+                                    <span class="picker-arrow">▼</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="swap-btn" onclick="swapCurrencies()" title="Swap">⇄</button>
+
+                    <div class="currency-card to-card">
+                        <div class="currency-card-label">📤 You Give</div>
+                        <div class="currency-input-row">
+                            <input type="number" class="amount-input" id="toAmount" value="1340.00" oninput="calculate('to')" placeholder="0.00">
+                            <div class="currency-picker" id="toPicker">
+                                <div class="picker-trigger" id="toTrigger">
+                                    <img src="https://flagcdn.com/w40/ca.png" class="picker-flag" id="toFlag">
+                                    <div class="picker-text">
+                                        <div class="picker-code" id="toCode">CAD</div>
+                                        <div class="picker-name" id="toName">Canadian Dollar</div>
+                                    </div>
+                                    <span class="picker-arrow">▼</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rate-box">
+    <div class="rate-header">
+        <div class="rate-display">
+            <!-- EDITABLE RATE INPUT 1 -->
+            <div class="rate-input-wrapper">
+                <span class="rate-label">1</span>
+                <span class="rate-currency" id="rateFromCode">USD</span>
+                <span class="rate-label">=</span>
+                <input type="number" step="0.0001" class="rate-editable" id="ratePrimaryInput" value="1.3400">
+                <span class="rate-currency" id="rateToCode">CAD</span>
+                <button class="rate-reset-btn" id="rateResetBtn" onclick="resetCustomRate()" title="Reset to calculated rate">↺ Reset</button>
+            </div>
+            <!-- EDITABLE RATE INPUT 2 (Inverse) -->
+            <div class="rate-input-wrapper">
+                <span class="rate-label">1</span>
+                <span class="rate-currency" id="rateToCode2">CAD</span>
+                <span class="rate-label">=</span>
+                <input type="number" step="0.0001" class="rate-editable" id="rateSecondaryInput" value="0.7463">
+                <span class="rate-currency" id="rateFromCode2">USD</span>
+            </div>
+        </div>
+        <span class="rate-time" id="rateTime">🕐 Updated just now</span>
+    </div>
+    <div class="market-rates" id="marketRates">
+        <span class="market-rate-item">📊 USD/CAD Market: 1.3605</span>
+        <span class="market-rate-item">📊 CAD/USD Market: 0.7351</span>
+    </div>
+    <div class="logic-box" id="logicBox">
+        <div class="logic-header" onclick="toggleLogicBox()">
+            <div class="logic-title"><span>📐</span><span>Calculation Logic</span></div>
+            <div class="logic-toggle">
+                <span id="logicToggleText">Show Details</span>
+                <div class="logic-toggle-icon">▼</div>
+            </div>
+        </div>
+        <div class="logic-content">
+            <div class="logic-content-inner">
+                <div class="logic-grid">
+                    <div class="logic-row"><span class="logic-label">Transaction</span><span class="logic-value" id="logicTx">Customer has USD, wants CAD</span></div>
+                    <div class="logic-row"><span class="logic-label">Base Rate (1 USD)</span><span class="logic-value" id="logicBase">1.3605 CAD</span></div>
+                    <div class="logic-row"><span class="logic-label">Margin Applied</span><span class="logic-value" id="logicMargin">-$0.0200 (Fixed)</span></div>
+                    <div class="logic-row"><span class="logic-label">Your Rate (1 USD)</span><span class="logic-value" id="logicFinal">1.3405 CAD</span></div>
+                    <div class="logic-row highlight"><span class="logic-label">💰 Your Profit</span><span class="logic-value" id="logicProfit">$20.00 CAD</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="rate-badges">
+        <span class="badge blue" id="badgeTier">📈 Tier: $0-500</span>
+        <span class="badge purple" id="badgeType">📏 Fixed Margin</span>
+        <span class="badge orange" id="badgeCustom" style="display: none;">✏️ Custom Rate</span>
+    </div>
+</div>
+
+                <div class="action-row">
+                    <button class="btn btn-primary" id="completeBtn" onclick="completeExchange()">✅ Complete Exchange</button>
+                    <button class="btn btn-secondary" onclick="printReceipt()">🧾 Receipt</button>
+                    <button class="btn btn-secondary" onclick="clearForm()">🗑️ Clear</button>
+                </div>
+            </div>
+            <div class="main-footer">
+                <p class="footer-text">Designed with <span class="heart">♥</span> by <a href="#">Berat Hiber</a> © 2025</p>
+            </div>
+        </div>
+
+        <div class="side-panel" id="sidePanel">
+            <div class="panel-header">
+                <div class="panel-header-content">
+                    <h2>Today's Activity</h2>
+                    <p id="todayDate">--</p>
+                </div>
+                <button class="panel-close" onclick="toggleSidePanel()">×</button>
+            </div>
+            <div class="panel-tabs">
+                <button class="panel-tab active" onclick="showPanelTab('stats', this)">📊 Stats</button>
+                <button class="panel-tab" onclick="showPanelTab('inventory', this)">📦 Inventory</button>
+                <button class="panel-tab" onclick="showPanelTab('history', this)">📜 History</button>
+            </div>
+            <div class="panel-body">
+                <div id="panelStats">
+                    <div class="stats-row">
+                        <div class="stat-box"><div class="stat-label">Transactions</div><div class="stat-value" id="statCount">0</div></div>
+                        <div class="stat-box"><div class="stat-label">Total Profit</div><div class="stat-value green" id="statProfit">$0.00</div></div>
+                    </div>
+                </div>
+                <div id="panelInventory" style="display: none;"><div class="inventory-list" id="inventoryList"><div class="empty-state">No inventory yet</div></div></div>
+                <div id="panelHistory" style="display: none;"><div id="historyList"><div class="empty-state">No transactions yet</div></div></div>
+            </div>
+            <div class="panel-footer"><p class="footer-text">🔥 Firebase Database</p></div>
+        </div>
+    </div>
+
+    <div class="picker-dropdown" id="currencyDropdown">
+        <div class="picker-search"><input type="text" placeholder="Search currency..." id="dropdownSearch"></div>
+        <div class="picker-list" id="dropdownList"></div>
+    </div>
+
+    <div class="modal-backdrop" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">⚙️ Settings</h2>
+                <button class="modal-close" onclick="closeSettings()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tabs">
+                    <button class="modal-tab active" onclick="showSettingsTab('rates', this)">💹 Manage Rates</button>
+                    <button class="modal-tab" onclick="showSettingsTab('margins', this)">📊 Margin Config</button>
+                </div>
+                <div id="tabRates">
+                    <div class="config-section">
+                        <div class="config-title">Manual Rate Entry (1 Foreign = X CAD)</div>
+                        <p style="font-size: 11px; color: var(--gray-500); margin-bottom: 10px;">Enter rates manually or sync from API. All rates are saved to Firebase.</p>
+                        <div class="search-box"><input type="text" id="rateSearchInput" placeholder="🔍 Search currencies..." oninput="filterRateGrid()" class="search-input"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span class="currency-count" id="rateCount">0 currencies</span>
+                            <div style="display: flex; gap: 6px;">
+                                <button class="mini-btn" onclick="resetRatesView()">Reset Filter</button>
+                            </div>
+                        </div>
+                        <div class="rate-grid" id="rateGrid"></div>
+                        <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                            <button class="btn btn-secondary" style="flex:1; min-width: 120px;" onclick="syncRatesFromAPI()">🔄 Sync from API</button>
+                            <button class="btn btn-primary" style="flex:1; min-width: 120px;" onclick="saveRates()">💾 Save to Firebase</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="tabMargins" style="display: none;">
+                    <div class="config-section">
+                        <div class="config-title">Select Currency to Configure</div>
+                        <div class="search-box"><input type="text" id="marginSearchInput" placeholder="🔍 Search currencies..." oninput="filterMarginTabs()" class="search-input"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span class="currency-count" id="marginCount">0 currencies</span>
+                            <button class="mini-btn" onclick="applyToAllCurrencies()">Apply to All</button>
+                        </div>
+                        <div class="currency-tabs-container" id="marginTabs"></div>
+                    </div>
+                    <div class="config-section">
+                        <div class="config-title">Margin Type for <span id="marginCurrLabel" class="highlight-currency">USD</span><span class="config-subtitle" id="marginCurrName">US Dollar</span></div>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" id="btnFixed" onclick="setMarginType('fixed')">💵 Fixed Amount ($)</button>
+                            <button class="toggle-btn" id="btnPercent" onclick="setMarginType('percentage')">📊 Percentage (%)</button>
+                        </div>
+                        <p style="font-size: 10px; color: var(--gray-400);">Fixed: Subtract/add exact amount. Percentage: Apply % margin to rate.</p>
+                    </div>
+                    <div class="config-section">
+                        <div class="config-title">Margin Tiers for <span id="tierCurrLabel" class="highlight-currency">USD</span></div>
+                        <p style="font-size: 11px; color: var(--gray-500); margin-bottom: 10px;">Configure different margins based on transaction amount.</p>
+                        <div class="tier-list" id="tierList"></div>
+                        <button class="add-tier-btn" onclick="addTier()">➕ Add New Tier</button>
+                    </div>
+                    <div class="save-actions">
+                        <button class="btn btn-secondary" onclick="resetMarginConfig()">🔄 Reset to Defaults</button>
+                        <button class="save-btn" onclick="saveMarginConfig()">💾 Save to Firebase</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop receipt-modal" id="receiptModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">🧾 Receipt</h2>
+                <button class="modal-close" onclick="closeReceipt()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="receipt" id="receiptContent"></div>
+                <div class="receipt-actions">
+                    <button class="btn btn-primary" style="flex:1" onclick="window.print()">🖨️ Print</button>
+                    <button class="btn btn-secondary" onclick="closeReceipt()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Main JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>
