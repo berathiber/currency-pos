@@ -12,6 +12,32 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const auth = firebase.auth();
+    
+function login(email, password) {
+  auth.signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      console.log("Logged in:", userCredential.user.email);
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+}
+
+function logout() {
+  auth.signOut();
+}
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    console.log("User authenticated");
+    // Enable write actions
+  } else {
+    console.log("User not logged in");
+    // Disable write actions
+  }
+});
+
 
     // =====================================================
     // DEFAULT CURRENCIES DATA
