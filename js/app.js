@@ -12,37 +12,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// ===== THEME TOGGLE SYSTEM =====
 
-class ThemeManager {
-    constructor() {
-        this.theme = this.getStoredTheme() || this.getSystemTheme();
-        this.init();
-    }
-
-    init() {
-        this.applyTheme(this.theme);
-        this.bindEvents();
-        this.watchSystemTheme();
-    }
-
-    getStoredTheme() {
-        return localStorage.getItem('theme');
-    }
-
-    getSystemTheme() {
-        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    }
-
-    applyTheme(theme) {
-        // Add transition class for smooth theme change
-        document.body.classList.add('theme-transitioning');
-
-        document.documentElement.setAttribute('data-theme', theme);
-        document.body.classList.remove('light-mode', 'dark-mode');
-        document.body.classList.add(`${theme}-mode`);
-
-        localStorage.setItem('theme', theme);
         // =====================================================
         // DEFAULT CURRENCIES DATA
         // =====================================================
